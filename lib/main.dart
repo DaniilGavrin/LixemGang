@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'router.dart';
+import 'package:beamer/beamer.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,12 +12,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      routerConfig: router,
+      routerDelegate: routerDelegate,
+      routeInformationParser: BeamerParser(),
       debugShowCheckedModeBanner: false,
+      title: 'Lixem Gang',
       theme: ThemeData(
-        appBarTheme: const AppBarTheme(
-          color: Colors.grey, // На всякий случай, но у нас кастомный AppBar
-        ),
+        appBarTheme: const AppBarTheme(color: Colors.grey),
       ),
     );
   }
