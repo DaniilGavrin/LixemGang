@@ -12,7 +12,7 @@ class MainApp extends StatelessWidget {
     return const MaterialApp(
       home: Scaffold(
         body: Center(
-          child: Text('Hello World!'),
+          child: Text('В данный момент сайт отключен! Он будет доступен 31.12.2025 по новому адресу lixemgang.com.\n\nС уважением команда Lixem Gang'),
         ),
       ),
     );

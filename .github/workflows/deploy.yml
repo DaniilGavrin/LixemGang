@@ -34,15 +34,15 @@ jobs:
           # rm -rf /var/www/lixemgang/{*,.*}
           # Но осторожно с .* — можно удалить .well-known!
 
-    - name: 🚀 Upload files
-      uses: appleboy/scp-action@v0.1.7
+    - name: 🚀 Deploy with rsync
+      uses: burnett01/rsync-deployments@v2.2
       with:
-        host: ${{ secrets.DEPLOY_HOST }}
-        username: ${{ secrets.DEPLOY_USER }}
-        password: ${{ secrets.DEPLOY_PASSWORD }}
-        source: "build/web/*"
-        target: "/var/www/lixemgang/"
-        # rm: false ← убираем!
+            switches: -av --delete
+            path: build/web/
+            remote_path: /var/www/lixemgang/
+            remote_host: ${{ secrets.DEPLOY_HOST }}
+            remote_user: ${{ secrets.DEPLOY_USER }}
+            remote_password: ${{ secrets.DEPLOY_PASSWORD }}
 
     - name: ✅ Reload nginx
       uses: appleboy/ssh-action@v0.1.10
