@@ -11,4 +11,5 @@ final GoRouter router = GoRouter(
       builder: (context, state) => const HomeScreen(),
     ),
   ],
+  errorBuilder: (context, state) => const NotFoundScreen(),
 );
