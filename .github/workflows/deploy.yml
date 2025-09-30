@@ -1,0 +1,43 @@
+name: Deploy Flutter Web via SFTP (Password Auth)
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+
+    - name: 🐦 Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.35.5'
+        channel: 'stable'
+
+    - name: 🌐 Build Web
+      run: flutter build web --release
+
+    - name: 🚀 Upload via SFTP
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.DEPLOY_HOST }}
+        username: ${{ secrets.DEPLOY_USER }}
+        password: ${{ secrets.DEPLOY_PASSWORD }}
+        port: 22
+        source: "build/web/*"
+        target: "/var/www/lixemgang/build/web"
+        rm: true  # удаляет старые файлы перед копированием
+
+    - name: ✅ Reload nginx
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.DEPLOY_HOST }}
+        username: ${{ secrets.DEPLOY_USER }}
+        password: ${{ secrets.DEPLOY_PASSWORD }}
+        port: 22
+        script: |
+          sudo systemctl reload nginx
