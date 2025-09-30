@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
+import 'router.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(const MyApp());
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('В данный момент сайт отключен! Он будет доступен 31.12.2025 по новому адресу lixemgang.com.\n\nС уважением команда Lixem Gang'),
+    return MaterialApp.router(
+      routerConfig: router,
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        appBarTheme: const AppBarTheme(
+          color: Colors.grey, // На всякий случай, но у нас кастомный AppBar
         ),
       ),
     );
