@@ -35,7 +35,7 @@ jobs:
           # Но осторожно с .* — можно удалить .well-known!
 
     - name: 🚀 Deploy with rsync
-      uses: burnett01/rsync-deployments@v2.2
+      uses: burnett01/rsync-deployments@v2.1.0
       with:
             switches: -av --delete
             path: build/web/
