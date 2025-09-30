@@ -1,4 +1,4 @@
-name: Deploy Flutter Web via SFTP (Password Auth)
+name: Deploy Flutter Web
 
 on:
   push:
@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: 📥 Checkout code
+    - name: 📥 Checkout
       uses: actions/checkout@v4
 
     - name: 🐦 Setup Flutter
@@ -21,16 +21,28 @@ jobs:
     - name: 🌐 Build Web
       run: flutter build web --release
 
-    - name: 🚀 Upload via SFTP
+    - name: 🔑 Setup SSH (for cleanup & reload)
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.DEPLOY_HOST }}
+        username: ${{ secrets.DEPLOY_USER }}
+        password: ${{ secrets.DEPLOY_PASSWORD }}
+        script: |
+          # Очистить СОДЕРЖИМОЕ папки, но не саму папку
+          rm -rf /var/www/lixemgang/*
+          # Или, если есть скрытые файлы (редко для Flutter):
+          # rm -rf /var/www/lixemgang/{*,.*}
+          # Но осторожно с .* — можно удалить .well-known!
+
+    - name: 🚀 Upload files
       uses: appleboy/scp-action@v0.1.7
       with:
         host: ${{ secrets.DEPLOY_HOST }}
         username: ${{ secrets.DEPLOY_USER }}
         password: ${{ secrets.DEPLOY_PASSWORD }}
-        port: 22
         source: "build/web/*"
         target: "/var/www/lixemgang/"
-        rm: true  # удаляет старые файлы перед копированием
+        # rm: false ← убираем!
 
     - name: ✅ Reload nginx
       uses: appleboy/ssh-action@v0.1.10
@@ -38,6 +50,4 @@ jobs:
         host: ${{ secrets.DEPLOY_HOST }}
         username: ${{ secrets.DEPLOY_USER }}
         password: ${{ secrets.DEPLOY_PASSWORD }}
-        port: 22
-        script: |
-          sudo systemctl reload nginx
+        script: sudo systemctl reload nginx
